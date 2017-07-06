@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+
+  "name": "truLock extension",
+  "description": "This extension locks selected urls with face recognition software",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ]
+}
