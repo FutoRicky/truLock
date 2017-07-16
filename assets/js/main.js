@@ -50,8 +50,8 @@ $(document).ready(function() {
     chrome.identity.getProfileUserInfo(function(userInfo) {
       var image = canvas.toDataURL('image/jpeg', 0.1).split(",")[1];
       var data = {
-        email: "eric.leinad92@gmail.com",
-        entity_id: "id1",
+        email: userInfo.email,
+        entity_id: userInfo.id,
         image: image
       }
 
