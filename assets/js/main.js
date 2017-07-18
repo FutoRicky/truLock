@@ -40,7 +40,7 @@ $(document).ready(function() {
   // Elements for taking the snapshot
   var canvas = document.getElementById('canvas');
   var context = canvas.getContext('2d');
-  var endpoint = 'http://localhost:4000/api';
+  var endpoint = 'https://trulock.herokuapp.com/api';
   var imgCount;
 
   // Trigger photo take
@@ -54,17 +54,17 @@ $(document).ready(function() {
         entity_id: userInfo.id,
         image: image
       }
-
+      var imgCount;
       fetch(endpoint + '/enroll', {
         method: 'POST',
         body: JSON.stringify(data)
       })
       .then(function(response) {
+        imgCount = response.img_count;
         return response.json();
       })
       .then(function(json) {
-        var imgCount = json.img_count;
-        $('h3').innerHTML('Pictures: ' + imgCount);
+        document.getElementById('imageCount').innerHTML = 'Pictures: ' + imgCount;
       });
     });
   });

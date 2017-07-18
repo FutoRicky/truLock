@@ -9,5 +9,15 @@ chrome.runtime.onInstalled.addListener(function(details) {
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  alert($('#urlList').value());
+  chrome.storage.sync.get(null, function(storageContent) {
+    if (storageContent.lockedUrls) {
+      storageContent.lockedUrls.forEach(function(lockedUrl) {
+        if (tab.url.includes(lockedUrl)) {
+          if (tab.url !== "templates/authUser.html") {
+            chrome.tabs.update(tab.id, {url: "templates/authUser.html"});
+          }
+        }
+      })
+    }
+  });
 });
