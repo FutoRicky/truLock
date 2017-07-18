@@ -17,10 +17,8 @@ $(document).ready(function() {
   });
 
   $('#updateButton').on('click', function() {
-    var urls = $('#urlList')[0].value.split(',');
-    storageArea.set({ 'lockedUrls': urls }, function() {
-      console.log('storageArea set');
-    });
+    var urls = $('#urlList')[0].value.replace(/\s+/g, '').split(',');
+    storageArea.set({ 'lockedUrls': urls }, function() {});
   });
 
   var video = document.getElementById('video');
@@ -40,7 +38,7 @@ $(document).ready(function() {
   // Elements for taking the snapshot
   var canvas = document.getElementById('canvas');
   var context = canvas.getContext('2d');
-  var endpoint = 'https://trulock.herokuapp.com/api';
+  var endpoint = 'http://tru-lock-api-dev.us-east-1.elasticbeanstalk.com/api';
   var imgCount;
 
   // Trigger photo take
@@ -48,6 +46,8 @@ $(document).ready(function() {
     context.drawImage(video, 0, 0, 320, 240);
 
     chrome.identity.getProfileUserInfo(function(userInfo) {
+      // TODO: Handler when no user is logged in to chrome
+
       var image = canvas.toDataURL('image/jpeg', 0.1).split(",")[1];
       var data = {
         email: userInfo.email,
@@ -69,36 +69,3 @@ $(document).ready(function() {
     });
   });
 });
-
-
-
-// var endpoint = 'http://localhost:4000/api';
-
-// takePhoto = function() {
-//   // Elements for taking the snapshot
-//   var canvas = document.getElementById('canvas');
-//   var context = canvas.getContext('2d');
-//   var video = document.getElementById('video');
-//
-//   // Trigger photo take
-//   document.getElementById("snap").addEventListener("click", function() {
-//   	context.drawImage(video, 0, 0, 640, 480);
-//   });
-// };
-
-// window.open(chrome.extension.getURL('enroll.html'));
-// $(document).ready(function() {
-//   var $container = $('#container');
-//   chrome.identity.getProfileUserInfo(function(userInfo) {
-//     $.ajax({
-//       method: 'POST',
-//       url: endpoint + '/enroll',
-//       data: { email: userInfo.email, id: userInfo.id }
-//     }).then(function(response) {
-//       if (response.img_count < 3) {
-//         window.open(chrome.extension.getURL('enroll.html'));
-//       }
-//     });
-//   });
-
-// });

@@ -15,7 +15,7 @@ $(document).ready(function() {
 
   var canvas = document.getElementById('canvas');
   var context = canvas.getContext('2d');
-  var endpoint = 'https://trulock.herokuapp.com/api';
+  var endpoint = 'http://tru-lock-api-dev.us-east-1.elasticbeanstalk.com/api';
   var imgCount;
 
   // Trigger photo take
@@ -35,7 +35,14 @@ $(document).ready(function() {
         body: JSON.stringify(data)
       })
       .then(function(response) {
-        debugger;
+        if (response.status === 200) {
+          chrome.storage.local.get(null, function(localStorage) {
+            chrome.storage.local.set({ 'access': true, 'authForUrl': localStorage.lockedUrl})
+            chrome.tabs.update(localStorage.accessTab, { url: localStorage.accessUrl });
+          })
+        } else {
+          // Show that user is unauthorized
+        }
         return response.json();
       })
       .then(function(json) {
