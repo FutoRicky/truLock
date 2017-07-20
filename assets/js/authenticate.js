@@ -28,25 +28,34 @@ $(document).ready(function() {
         email: userInfo.email,
         entity_id: userInfo.id,
         image: image
-      }
+      };
       var imgCount;
       fetch(endpoint + '/authenticate', {
         method: 'POST',
         body: JSON.stringify(data)
       })
       .then(function(response) {
-        if (response.status === 200) {
-          chrome.storage.local.get(null, function(localStorage) {
-            chrome.storage.local.set({ 'access': true, 'authForUrl': localStorage.lockedUrl})
-            chrome.tabs.update(localStorage.accessTab, { url: localStorage.accessUrl });
-          })
-        } else {
-          // Show that user is unauthorized
+        switch (response.status) {
+          case 200:
+            chrome.storage.local.get(null, function(localStorage) {
+              // chrome.storage.local.set({ 'access': true, 'authForUrl': localStorage.lockedUrl});
+              chrome.tabs.update(localStorage.accessTab, { url: localStorage.accessUrl });
+            })
+            chrome.storage.sync.set({ locked: false }, function() {});
+            break;
+          case 502:
+            document.getElementById('message').innerHTML = "We're sorry, we encountered a problem authenticating you. Please try again.";
+            break;
+          case 403:
+            document.getElementById('message').innerHTML = "You must finish the signup process before authenticating.";
+            break;
+          default:
+            document.getElementById('message').innerHTML = "You do not appear to be who you say you are... No access for you.";
+
         }
-        return response.json();
+        // return response.json();
       })
       .then(function(json) {
-        document.getElementById('imageCount').innerHTML = 'Pictures: ' + imgCount;
       });
     });
   });

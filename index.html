@@ -8,15 +8,23 @@
   <body>
 
     <div id="container">
-      <h4 id="imageCount"></h4>
-      <video id="video" width="320" height="240" autoplay></video>
-      <button id="snap">Snap Photo</button>
-      <div>
-        <span>Write desired locked urls separated by commas</span>
-        <textarea id="urlList" rows="8" cols="80"></textarea>
-        <button id="updateButton">Update Url List</button>
+      <div id="enrollContainer">
+        <h4 id="imageCount"></h4>
+        <h5 id="imagesLeft"></h5>
+        <video id="video" width="320" height="240" autoplay></video>
+        <button id="snap">Snap Photo</button>
+        <canvas id="canvas" width="320" height="240"></canvas>
       </div>
-      <canvas id="canvas" width="320" height="240"></canvas>
+
+      <div id="lockContainer" hidden>
+        <button id="lockButton">Lock</button>
+        <div>
+          <span>Write desired locked urls separated by commas</span>
+          <textarea id="urlList" rows="8" cols="80"></textarea>
+          <button id="updateButton">Update Url List</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- scripts -->

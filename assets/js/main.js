@@ -1,11 +1,5 @@
 // TODO: Handler for when no user is logged in to chrome
-// TODO: Have 2 options/sections on extension popup [LOCK|ENROLL(if less than 3 images)AddMoreImageData(if 3 or more images)]
-//         - Maybe have a "enrolled|not enrolled" display
-//         - On the lock option toggle if extension should lock urls or not. Maybe consider authenticating once for all urls instead of an auth per url
 // TODO: Styling
-// TODO: Alert when authentication failed
-// TODO: Show image count
-
 
 var storageArea = chrome.storage.sync;
 
@@ -17,8 +11,26 @@ var setUrlList = function() {
   });
 };
 
-$(document).ready(function() {
+var lockButtonText = function() {
+  chrome.storage.sync.get(null, function(storage) {
+    if (storage.locked) {
+      $("#lockButton").text("Unlock");
+    } else {
+      $("#lockButton").text("Lock");
+    }
+  });
+};
 
+$(document).ready(function() {
+  var isEnrolled;
+  storageArea.get(null, function(storageContent) {
+    if (storageContent.enrolled) {
+      $('#enrollContainer').hide();
+      $('#lockContainer').show();
+    }
+  });
+
+  lockButtonText();
   setUrlList();
 
   chrome.storage.onChanged.addListener(function() {
@@ -61,19 +73,39 @@ $(document).ready(function() {
         email: userInfo.email,
         entity_id: userInfo.id,
         image: image
-      }
+      };
       var imgCount;
       fetch(endpoint + '/enroll', {
         method: 'POST',
         body: JSON.stringify(data)
       })
       .then(function(response) {
-        imgCount = response.img_count;
         return response.json();
       })
       .then(function(json) {
-        document.getElementById('imageCount').innerHTML = 'Pictures: ' + imgCount;
+        if (json.image_count >= 5) {
+          storageArea.set({ 'enrolled': true }, function() {});
+          $('#enrollContainer').hide();
+          $('#lockContainer').show();
+        } else {
+          document.getElementById('imageCount').innerHTML = 'Pictures Taken: ' + json.image_count;
+          document.getElementById('imagesLeft').innerHTML = (5 - json.image_count) + ' more pictures are needed to start locking urls';
+        }
       });
+    });
+  });
+
+  document.getElementById("lockButton").addEventListener("click", function() {
+    chrome.storage.sync.get(null, function(storage) {
+      if (!storage.locked) {
+        chrome.storage.sync.set({ 'locked': true }, function() {});
+        $("#lockButton").text("Unlock");
+      } else {
+        chrome.tabs.create({
+          url: chrome.extension.getURL("templates/authUser.html"),
+          active: true
+        });
+      }
     });
   });
 });
