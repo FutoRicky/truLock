@@ -1,0 +1,19 @@
+#container {
+  width: 50em;
+}
+
+#lockButton {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+#snap, #updateButton {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+#urlSettingsContainer, #enrollContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

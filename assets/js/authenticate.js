@@ -42,6 +42,7 @@ $(document).ready(function() {
               chrome.tabs.update(localStorage.accessTab, { url: localStorage.accessUrl });
             })
             chrome.storage.sync.set({ locked: false }, function() {});
+            document.getElementById('message').innerHTML = "Urls unlocked!";
             break;
           case 502:
             document.getElementById('message').innerHTML = "We're sorry, we encountered a problem authenticating you. Please try again.";

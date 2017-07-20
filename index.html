@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.0/css/materialize.min.css">
     <title></title>
   </head>
   <body>
@@ -12,16 +13,16 @@
         <h4 id="imageCount"></h4>
         <h5 id="imagesLeft"></h5>
         <video id="video" width="320" height="240" autoplay></video>
-        <button id="snap">Snap Photo</button>
+        <button id="snap" class="waves-effect waves-light btn light-blue accent-2">Snap Photo</button>
         <canvas id="canvas" width="320" height="240"></canvas>
       </div>
 
       <div id="lockContainer" hidden>
-        <button id="lockButton">Lock</button>
-        <div>
-          <span>Write desired locked urls separated by commas</span>
+        <button id="lockButton" class="waves-effect waves-light btn-large">Lock</button>
+        <div id="urlSettingsContainer">
+          <h6>Write desired locked urls separated by commas</h6>
           <textarea id="urlList" rows="8" cols="80"></textarea>
-          <button id="updateButton">Update Url List</button>
+          <button id="updateButton" class="waves-effect waves-light btn light-blue accent-2">Update Url List</button>
         </div>
       </div>
 

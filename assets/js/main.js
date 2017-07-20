@@ -2,6 +2,7 @@
 // TODO: Styling
 
 var storageArea = chrome.storage.sync;
+var video;
 
 var setUrlList = function() {
   storageArea.get(null, function(storageContent) {
@@ -21,12 +22,30 @@ var lockButtonText = function() {
   });
 };
 
+var videoProcedure = function() {
+  video = document.getElementById('video');
+
+  try {
+    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+      video.src = window.URL.createObjectURL(stream);
+      video.play();
+    });
+  } catch (e) {
+    chrome.tabs.create({
+      url: chrome.extension.getURL("templates/videoPermission.html"),
+      active: true
+    });
+  }
+}
+
 $(document).ready(function() {
   var isEnrolled;
   storageArea.get(null, function(storageContent) {
     if (storageContent.enrolled) {
       $('#enrollContainer').hide();
       $('#lockContainer').show();
+    } else {
+      videoProcedure();
     }
   });
 
@@ -42,19 +61,6 @@ $(document).ready(function() {
     storageArea.set({ 'lockedUrls': urls }, function() {});
   });
 
-  var video = document.getElementById('video');
-
-  try {
-    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-      video.src = window.URL.createObjectURL(stream);
-      video.play();
-    });
-  } catch (e) {
-    chrome.tabs.create({
-      url: chrome.extension.getURL("templates/videoPermission.html"),
-      active: true
-    });
-  }
 
   // Elements for taking the snapshot
   var canvas = document.getElementById('canvas');
